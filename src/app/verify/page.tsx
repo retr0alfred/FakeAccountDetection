@@ -1,22 +1,22 @@
 "use client";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-import { useSearchParams } from "next/navigation";
-import { StarsBackground } from "../../../components/ui/stars-background"; // Ensure correct path
-import { ShootingStars } from "../../../components/ui/shooting-stars"; // Ensure correct path
+export default function VerifyPage() {
+  const router = useRouter();
 
-export default function Verify() {
-  const searchParams = useSearchParams();
-  const username = searchParams.get("username");
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      router.push("/report"); // Navigate after 10 seconds
+    }, 10000);
+
+    return () => clearTimeout(timer); // Cleanup in case component unmounts
+  }, [router]);
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen bg-black text-white p-4">
-      <StarsBackground />
-      <ShootingStars />
-      <div className="relative z-10 text-center">
-        <h1 className="text-2xl font-semibold text-white mb-4">
-          Verifying {username}...
-        </h1>
-      </div>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
+      <h1 className="text-3xl font-bold mb-6">Verification Page</h1>
+      <p className="text-lg">Redirecting to image display in 10 seconds...</p>
     </div>
   );
 }
