@@ -63,19 +63,16 @@ const LoaderCore = ({
             transition={{ duration: 0.5 }}
           >
             <div>
-              {index > value && <CheckIcon className="text-white" />} {/* White tick */}
-              {index <= value && <CheckFilled className="text-white" />} {/* White tick */}
+              {index > value && <CheckIcon className="text-white" />}
+              {index <= value && <CheckFilled className="text-white" />}
             </div>
-            <span className="text-white"> {/* White text */}
-              {loadingState.text}
-            </span>
+            <span className="text-white">{loadingState.text}</span>
           </motion.div>
         );
       })}
     </div>
   );
 };
-
 
 export const MultiStepLoader = ({
   loadingStates,
@@ -113,31 +110,28 @@ export const MultiStepLoader = ({
       {loading && (
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1, transition: { duration: 1.5, ease: "easeOut" } }} // Smooth fade-in
-          exit={{ opacity: 0, transition: { duration: 1.2, ease: "easeInOut" } }} // Smooth fade-out
+          animate={{ opacity: 1, transition: { duration: 1.5, ease: "easeOut" } }}
+          exit={{ opacity: 0, transition: { duration: 1.2, ease: "easeInOut" } }}
           className="w-full h-full fixed inset-0 z-[100] flex items-center justify-center"
         >
-          {/* Background Stars & Shooting Stars remain visible */}
           <StarsBackground />
           <ShootingStars />
 
-          {/* Blurred Overlay with Smooth Transition */}
           <motion.div
             initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
             animate={{
               opacity: 1,
-              backdropFilter: "blur(20px)", // Smoothly increases blur
+              backdropFilter: "blur(20px)",
               transition: { duration: 1.3, ease: "easeOut" },
             }}
             exit={{
               opacity: 0,
-              backdropFilter: "blur(0px)", // Smoothly removes blur
+              backdropFilter: "blur(0px)",
               transition: { duration: 1.1, ease: "easeInOut" },
             }}
             className="absolute inset-0 bg-black/40"
           />
 
-          {/* Loader Content with Smooth Scale */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1, transition: { duration: 1.3, ease: "easeOut" } }}

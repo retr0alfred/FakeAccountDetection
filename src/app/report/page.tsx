@@ -1,202 +1,168 @@
-/*"use client";
-import React, { useState, useRef, useEffect } from "react";
-import { LayoutGrid } from "../../../components/ui/layout-grid";
-
-export default function ReportPage() {
-    return (
-        <div className="h-screen py-20 w-full">
-          <LayoutGrid cards={cards} />
-        </div>
-      );
-  }
-  
-
-export function LayoutGridDemo() {
-  return (
-    <div className="h-screen py-20 w-full">
-      <LayoutGrid cards={cards} />
-    </div>
-  );
-}
-
-const SkeletonOne = () => {
-  return (
-    <div>
-      <p className="font-bold md:text-4xl text-xl text-white">
-        House in the woods
-      </p>
-      <p className="font-normal text-base text-white"></p>
-      <p className="font-normal text-base my-4 max-w-lg text-neutral-200">
-        A serene and tranquil retreat, this house in the woods offers a peaceful
-        escape from the hustle and bustle of city life.
-      </p>
-    </div>
-  );
-};
-
-const SkeletonTwo = () => {
-  return (
-    <div>
-      <p className="font-bold md:text-4xl text-xl text-white">
-        House above the clouds
-      </p>
-      <p className="font-normal text-base text-white"></p>
-      <p className="font-normal text-base my-4 max-w-lg text-neutral-200">
-        Perched high above the world, this house offers breathtaking views and a
-        unique living experience. It&apos;s a place where the sky meets home,
-        and tranquility is a way of life.
-      </p>
-    </div>
-  );
-};
-const SkeletonThree = () => {
-  return (
-    <div>
-      <p className="font-bold md:text-4xl text-xl text-white">
-        Greens all over
-      </p>
-      <p className="font-normal text-base text-white"></p>
-      <p className="font-normal text-base my-4 max-w-lg text-neutral-200">
-        A house surrounded by greenery and nature&apos;s beauty. It&apos;s the
-        perfect place to relax, unwind, and enjoy life.
-      </p>
-    </div>
-  );
-};
-const SkeletonFour = () => {
-  return (
-    <div>
-      <p className="font-bold md:text-4xl text-xl text-white">
-        Rivers are serene
-      </p>
-      <p className="font-normal text-base text-white"></p>
-      <p className="font-normal text-base my-4 max-w-lg text-neutral-200">
-        A house by the river is a place of peace and tranquility. It&apos;s the
-        perfect place to relax, unwind, and enjoy life.
-      </p>
-    </div>
-  );
-};
-
-const cards = [
-  {
-    id: 1,
-    content: <SkeletonOne />,
-    className: "md:col-span-2",
-    thumbnail:
-      "https://images.unsplash.com/photo-1476231682828-37e571bc172f?q=80&w=3474&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    id: 2,
-    content: <SkeletonTwo />,
-    className: "col-span-1",
-    thumbnail:
-      "https://images.unsplash.com/photo-1464457312035-3d7d0e0c058e?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    id: 3,
-    content: <SkeletonThree />,
-    className: "col-span-1",
-    thumbnail:
-      "https://images.unsplash.com/photo-1588880331179-bc9b93a8cb5e?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-  {
-    id: 4,
-    content: <SkeletonFour />,
-    className: "md:col-span-2",
-    thumbnail:
-      "https://images.unsplash.com/photo-1475070929565-c985b496cb9f?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  },
-];*/
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { StarsBackground } from "../../../components/ui/stars-background";
+import React from "react";
+import {
+  BarChart, Bar, XAxis, YAxis, Tooltip, Legend, PieChart, Pie, Cell,
+  RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar
+} from "recharts";
+import { motion } from "framer-motion";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
 import { ShootingStars } from "../../../components/ui/shooting-stars";
+import { StarsBackground } from "../../../components/ui/stars-background";
 
-// Define TypeScript types for API response
-interface FeatureContributions {
-  "#followers": number;
-  "#follows": number;
-  "#posts": number;
-  "description length": number;
-  "external URL": number;
-  "fullname words": number;
-  "name==username": number;
-  "nums/length fullname": number;
-  "nums/length username": number;
-  "private": number;
-  "profile pic": number;
-}
+const FakeAccountDashboard = () => {
+  const featuresData = [
+    { category: "Profile Indicators", features: [
+      { name: "Profile Picture", value: 21.04 },
+      { name: "Private", value: 21.04 },
+      { name: "Description Length", value: 0.69 },
+    ]},
+    { category: "Username Patterns", features: [
+      { name: "Fullname Words", value: 15.46 },
+      { name: "Username", value: 94.87 },
+      { name: "Length of Full Name", value: 21.04 },
+      { name: "Length of Username", value: 0.69 },
+    ]},
+    { category: "Social Metrics", features: [
+      { name: "Followers", value: 0.30 },
+      { name: "Follows", value: 28.33 },
+      { name: "Posts", value: 15.46 },
+    ]},
+  ];
 
-interface ApiResponse {
-  fake_score: number;
-  feature_contributions: FeatureContributions;
-  username: string;
-}
+  const radarData = [
+    { subject: "Fullname Words", A: 15.46 },
+    { subject: "Username", A: 94.87 },
+    { subject: "Length Fullname", A: 21.04 },
+    { subject: "Length Username", A: 0.69 },
+  ];
 
-export default function Verify() {
-  const searchParams = useSearchParams();
-  const username = searchParams.get("username");
-  
-  const [data, setData] = useState<ApiResponse | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const barData = featuresData.flatMap(category =>
+    category.features.map(feature => ({
+      name: feature.name,
+      value: feature.value,
+      category: category.category,
+    }))
+  );
 
-  useEffect(() => {
-    if (!username) return;
+  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
 
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(`http://localhost:5000/predict?username=${encodeURIComponent(username)}`);
-        if (!response.ok) throw new Error("Failed to fetch data");
-
-        const result: ApiResponse = await response.json();
-        setData(result);
-      } catch (err) {
-        setError("Failed to fetch account details.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [username]);
+  const handlePrint = () => {
+    window.print();
+  };
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen bg-black text-white p-4">
+    <div className="relative p-6 space-y-6 bg-black min-h-screen flex flex-col items-center text-white font-sans">
       <StarsBackground />
-      <ShootingStars />
-      
-      <div className="relative z-10 text-center">
-        <h1 className="text-2xl font-semibold text-white mb-4">
-          Verifying {username}...
-        </h1>
-
-        {loading && <p className="text-gray-400">Loading analysis...</p>}
-        {error && <p className="text-red-500">{error}</p>}
-
-        {data && (
-          <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-lg font-semibold text-yellow-300">
-              Fake Score: {data.fake_score.toFixed(2)}%
-            </h2>
-            <p className="text-sm text-gray-400 mb-4">
-              Breakdown of feature contributions:
-            </p>
-            <ul className="mt-2 text-gray-400 text-sm">
-              {Object.entries(data.feature_contributions).map(([key, value]) => (
-                <li key={key} className="flex justify-between">
-                  <span>{key.replace(/_/g, " ")}</span>
-                  <span className="text-yellow-300">{value.toFixed(2)}%</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+      <div className="absolute inset-0 pointer-events-none">
+        <ShootingStars />
       </div>
+
+      <motion.h1
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1, transition: { duration: 1.2, ease: "easeInOut" } }}
+        className="relative text-3xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-white via-gray-300 to-gray-500 text-center"
+      >
+        Fake Account Detection Dashboard
+      </motion.h1>
+
+      <div className="relative text-center text-lg tracking-wide font-medium mt-[-20px] opacity-70">
+  Fake Account Score: <span className="font-bold text-red-400">74.00%</span>
+</div>
+
+
+      <div className="relative grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-6xl">
+        <Card className="relative border border-gray-500 bg-transparent shadow-none">
+          <CardHeader className="text-center">
+            <CardTitle className="text-white font-medium">Feature Contribution Breakdown</CardTitle>
+          </CardHeader>
+          <CardContent className="flex justify-center">
+            <BarChart width={500} height={300} data={barData}>
+              <XAxis 
+                dataKey="name" 
+                angle={-45} 
+                textAnchor="end" 
+                interval={0} 
+                stroke="white" 
+                style={{ fontSize: "14px", fontWeight: "500" }} 
+              />
+              <YAxis stroke="white" style={{ fontSize: "14px", fontWeight: "500" }} />
+              <Tooltip />
+              <Legend wrapperStyle={{ fontSize: "14px", fontWeight: "500", color: "white" }} />
+              <Bar dataKey="value" fill="#8884d8">
+                {barData.map((entry, index) => (
+                  <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Bar>
+            </BarChart>
+          </CardContent>
+        </Card>
+
+        <Card className="relative border border-gray-500 bg-transparent shadow-none">
+          <CardHeader className="text-center">
+            <CardTitle className="text-white font-medium">Feature Category Distribution</CardTitle>
+          </CardHeader>
+          <CardContent className="flex justify-center">
+            <PieChart width={500} height={300}>
+              <Pie
+                data={featuresData}
+                dataKey={(entry) => entry.features.length}
+                nameKey="category"
+                cx="50%"
+                cy="50%"
+                outerRadius={120}
+                fill="#8884d8"
+                label
+              >
+                {featuresData.map((entry, index) => (
+                  <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend wrapperStyle={{ fontSize: "14px", fontWeight: "500", color: "white" }} />
+            </PieChart>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card className="relative border border-gray-500 bg-transparent shadow-none w-full max-w-6xl">
+        <CardHeader className="text-center">
+          <CardTitle className="text-white font-medium">Username Patterns Intensity Analysis</CardTitle>
+        </CardHeader>
+        <CardContent className="flex justify-center">
+          <RadarChart 
+            cx="50%" 
+            cy="50%" 
+            outerRadius="80%" 
+            width={600} 
+            height={400} 
+            data={radarData}
+          >
+            <PolarGrid stroke="white" />
+            <PolarAngleAxis dataKey="subject" stroke="white" style={{ fontSize: "14px", fontWeight: "500" }} />
+            <PolarRadiusAxis angle={30} domain={[0, 100]} stroke="white" style={{ fontSize: "14px", fontWeight: "500" }} />
+            <Radar 
+              name="Username Metrics" 
+              dataKey="A" 
+              stroke="#8884d8" 
+              fill="#8884d8" 
+              fillOpacity={0.6} 
+            />
+            <Tooltip />
+            <Legend wrapperStyle={{ fontSize: "14px", fontWeight: "500", color: "white" }} />
+          </RadarChart>
+        </CardContent>
+      </Card>
+
+      <button
+        onClick={handlePrint}
+        className="relative px-6 py-2 mt-6 text-white border border-gray-500 bg-transparent rounded-lg 
+        font-medium transition-all duration-300 hover:bg-white hover:text-black hover:shadow-lg"
+      >
+        Generate Report 🖨️
+      </button>
     </div>
   );
-}
+};
+
+export default FakeAccountDashboard;

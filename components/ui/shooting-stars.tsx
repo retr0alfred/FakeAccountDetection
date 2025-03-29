@@ -25,6 +25,8 @@ interface ShootingStarsProps {
 }
 
 const getRandomStartPoint = () => {
+  if (typeof window === "undefined") return { x: 0, y: 0, angle: 45 };
+
   const side = Math.floor(Math.random() * 4);
   const offset = Math.random() * window.innerWidth;
 
@@ -41,56 +43,96 @@ const getRandomStartPoint = () => {
       return { x: 0, y: 0, angle: 45 };
   }
 };
+
 export const ShootingStars: React.FC<ShootingStarsProps> = ({
-  minSpeed = 10,
-  maxSpeed = 30,
-  minDelay = 1200,
-  maxDelay = 4200,
+  minSpeed = 15,
+  maxSpeed = 40,
+  minDelay = 300,
+  maxDelay = 1200,
   starColor = "#9E00FF",
   trailColor = "#2EB9DF",
   starWidth = 10,
   starHeight = 1,
   className,
 }) => {
-  const [star, setStar] = useState<ShootingStar | null>(null);
+  const [stars, setStars] = useState<ShootingStar[]>([]);
   const svgRef = useRef<SVGSVGElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const isVisibleRef = useRef<boolean>(true);
 
   useEffect(() => {
-    const createStar = () => {
-      const { x, y, angle } = getRandomStartPoint();
-      const newStar: ShootingStar = {
-        id: Date.now(),
-        x,
-        y,
-        angle,
-        scale: 1,
-        speed: Math.random() * (maxSpeed - minSpeed) + minSpeed,
-        distance: 0,
-      };
-      setStar(newStar);
+    const handleVisibilityChange = () => {
+      isVisibleRef.current = document.visibilityState === "visible";
 
-      const randomDelay = Math.random() * (maxDelay - minDelay) + minDelay;
-      setTimeout(createStar, randomDelay);
+      if (!isVisibleRef.current) {
+        setStars([]);
+
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+          timeoutRef.current = null;
+        }
+
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+      } else {
+        createStar();
+        startMovingStars();
+      }
     };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
+
+  const createStar = () => {
+    if (!isVisibleRef.current || typeof window === "undefined") return;
+
+    const { x, y, angle } = getRandomStartPoint();
+    const newStar: ShootingStar = {
+      id: Date.now(),
+      x,
+      y,
+      angle,
+      scale: 1,
+      speed: Math.random() * (maxSpeed - minSpeed) + minSpeed,
+      distance: 0,
+    };
+
+    setStars((prevStars) => [...prevStars, newStar]);
+
+    const randomDelay = Math.random() * (maxDelay - minDelay) + minDelay;
+    timeoutRef.current = setTimeout(createStar, randomDelay);
+  };
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
 
     createStar();
 
-    return () => {};
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
   }, [minSpeed, maxSpeed, minDelay, maxDelay]);
 
-  useEffect(() => {
-    const moveStar = () => {
-      if (star) {
-        setStar((prevStar) => {
-          if (!prevStar) return null;
-          const newX =
-            prevStar.x +
-            prevStar.speed * Math.cos((prevStar.angle * Math.PI) / 180);
-          const newY =
-            prevStar.y +
-            prevStar.speed * Math.sin((prevStar.angle * Math.PI) / 180);
-          const newDistance = prevStar.distance + prevStar.speed;
+  const moveStars = () => {
+    if (!isVisibleRef.current) return;
+
+    setStars((prevStars) =>
+      prevStars
+        .map((star) => {
+          const newX = star.x + star.speed * Math.cos((star.angle * Math.PI) / 180);
+          const newY = star.y + star.speed * Math.sin((star.angle * Math.PI) / 180);
+          const newDistance = star.distance + star.speed;
           const newScale = 1 + newDistance / 100;
+
           if (
             newX < -20 ||
             newX > window.innerWidth + 20 ||
@@ -99,27 +141,53 @@ export const ShootingStars: React.FC<ShootingStarsProps> = ({
           ) {
             return null;
           }
-          return {
-            ...prevStar,
-            x: newX,
-            y: newY,
-            distance: newDistance,
-            scale: newScale,
-          };
-        });
+
+          return { ...star, x: newX, y: newY, distance: newDistance, scale: newScale };
+        })
+        .filter((star): star is ShootingStar => star !== null)
+    );
+  };
+
+  const startMovingStars = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    intervalRef.current = setInterval(moveStars, 16);
+  };
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    startMovingStars();
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
       }
     };
+  }, []);
 
-    const animationFrame = requestAnimationFrame(moveStar);
-    return () => cancelAnimationFrame(animationFrame);
-  }, [star]);
+  useEffect(() => {
+    const handleResize = () => {
+      setStars([]);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
-    <svg
-      ref={svgRef}
-      className={cn("w-full h-full absolute inset-0", className)}
-    >
-      {star && (
+    <svg ref={svgRef} className={cn("w-full h-full absolute inset-0", className)}>
+      <defs>
+        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor={trailColor} stopOpacity={0} />
+          <stop offset="100%" stopColor={starColor} stopOpacity={1} />
+        </linearGradient>
+      </defs>
+      {stars.map((star) => (
         <rect
           key={star.id}
           x={star.x}
@@ -127,20 +195,11 @@ export const ShootingStars: React.FC<ShootingStarsProps> = ({
           width={starWidth * star.scale}
           height={starHeight}
           fill="url(#gradient)"
-          transform={`rotate(${star.angle}, ${
-            star.x + (starWidth * star.scale) / 2
-          }, ${star.y + starHeight / 2})`}
+          transform={`rotate(${star.angle}, ${star.x + (starWidth * star.scale) / 2}, ${
+            star.y + starHeight / 2
+          })`}
         />
-      )}
-      <defs>
-        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" style={{ stopColor: trailColor, stopOpacity: 0 }} />
-          <stop
-            offset="100%"
-            style={{ stopColor: starColor, stopOpacity: 1 }}
-          />
-        </linearGradient>
-      </defs>
+      ))}
     </svg>
   );
 };

@@ -2,7 +2,6 @@
 import React, { useState, useRef, useEffect, JSX } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { cn } from "../../lib/utils";
-import Image from "next/image";
 
 type Card = {
   id: number;
