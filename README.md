@@ -30,7 +30,7 @@ Fake-Account-Detection/
 │── .env.example      # Environment variable configuration  
 │── package.json      # Dependencies and scripts  
 │── README.md         # Project documentation  
-
+```
 
 ---
 
