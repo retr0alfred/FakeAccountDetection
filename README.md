@@ -1,6 +1,4 @@
-# Fake-Account-Detection
-
-# 🔍 Fake Account Detection System  
+# Fake-Account-Detection 
 
 A **Machine Learning and Deep Learning-powered system** designed to **detect fake social media profiles** in real time by analyzing metadata, activity patterns, and content authenticity. This system can be integrated with social media platforms via a **REST API** for automated detection.  
 
