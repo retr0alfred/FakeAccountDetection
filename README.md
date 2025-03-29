@@ -1,6 +1,5 @@
 # Fake-Account-Detection
 
-```markdown
 # 🔍 Fake Account Detection System  
 
 A **Machine Learning and Deep Learning-powered system** designed to **detect fake social media profiles** in real time by analyzing metadata, activity patterns, and content authenticity. This system can be integrated with social media platforms via a **REST API** for automated detection.  
@@ -33,7 +32,7 @@ Fake-Account-Detection/
 │── .env.example      # Environment variable configuration  
 │── package.json      # Dependencies and scripts  
 │── README.md         # Project documentation  
-```
+
 
 ---
 
@@ -52,75 +51,6 @@ Fake-Account-Detection/
 - 🧠 **Python (Flask or FastAPI)** – API for ML model inference  
 - 🤖 **TensorFlow/PyTorch** – Deep learning for fake profile detection  
 - 🖼️ **OpenCV & Face Recognition** – Image-based verification  
-
----
-
-## 🚀 Getting Started  
-
-### 1️⃣ Clone the Repository  
-```bash
-git clone https://github.com/retr0alfred/Fake-Account-Detection.git
-cd Fake-Account-Detection
-```
-
-### 2️⃣ Install Dependencies  
-
-#### Install frontend dependencies:  
-```bash
-cd src/app
-npm install
-```
-
-#### Install backend dependencies:  
-```bash
-cd server
-npm install
-```
-
-### 3️⃣ Set Up Environment Variables  
-
-Create a `.env` file in the root directory based on `.env.example` and configure:  
-```env
-MONGO_URI=your_mongodb_connection_string
-API_KEY=your_api_key
-```
-
-### 4️⃣ Run the Application  
-
-#### Start the backend server:  
-```bash
-cd server
-npm start
-```
-
-#### Start the frontend:  
-```bash
-cd src/app
-npm run dev
-```
-
-Now, visit **http://localhost:3000** in your browser! 🎉  
-
----
-
-## 📡 API Endpoints  
-
-### **🔍 Check Fake Profile**  
-**Endpoint:** `/api/check-profile`  
-**Method:** `POST`  
-**Body:**  
-```json
-{
-  "profile_url": "https://example.com/user123"
-}
-```  
-**Response:**  
-```json
-{
-  "fake_score": 74.5,
-  "is_fake": true
-}
-```
 
 ---
 
